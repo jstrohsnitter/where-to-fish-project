@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Trips Index</title>
+  </head>
+  <body>
+    <h1>All Trips</h1>
+    <ul>
+        <% trips.forEach(trip => { %>
+          <li><a href="/trips/<%= trip._id %>"><%= trip.date%></a> <%= trip.locationName %></li>
+        <% }); %>
+    </ul>
+    <a href="/trips/new">Log a New Trip</a>
+  </body>
+</html>
