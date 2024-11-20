@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Edit a Trip</title>
+  </head>
+  <body>
+    <h1>Edit <%= trip.date %> Trip</h1>
+
+    <form action="/trips/<%=trip._id%>?_method=PUT"  method="POST">
+        <label for="date">Date (MM/DD/YYYY):</label>
+        <input type="text" name="date" id="editDate" value="<%= trip.date %>"/>
+
+        <label for="locationName">Location Name:</label>
+        <input type="text" name="locationName" id="editLocationName" value="<%= trip.locationName %>" />
+
+        <label for="locationCoord">Location Coordinates:</label>
+        <input type="text" name="locationCoord" id="editLocationCoord" value="<%= trip.locationCoord %>" />
+
+        <label for="timeArrived">Time Arrived:</label>
+        <input type="text" name="timeArrived" id="editTimeArrived" value="<%= trip.timeArrived %>"/>
+
+        <label for="timeArrived">Time Departed:</label>
+        <input type="text" name="timeDeparted" id="editTimeDeparted" value="<%= trip.timeDeparted %>"/>
+    
+        <label for="caughtFish">Catch Anything?</label>
+        <input type="checkbox" name="caughtFish" id="editCaughtFish" <% if (trip.caughtFish) { %>checked<% } %> />
+    
+        <button type="submit">Update Trip</button>
+      </form>
+      <a href="/trips/">Back to Trips</a>
+  </body>
+</html>

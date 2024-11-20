@@ -39,7 +39,7 @@ app.get("/trips/new", (req, res) => {
 app.post("/trips", async (req, res) => {
     if (req.body.caughtFish === "on") {
         req.body.caughtFish = true;
-        // res.redirect("/trips/:tripId/fish/new")
+        // res.redirect("/trips/:tripId/fish/new") need to check whether the s on trips on line 30 effects this code
         // //app.get("/trips/:tripId/fish/new", (req, res) => {
         //   //  console.log("new fish");
         //     //res.send("new fish")
@@ -62,6 +62,32 @@ app.delete("/trips/:tripId", async (req, res) => {
     await Trip.findByIdAndDelete(req.params.tripId);
     res.redirect("/trips");
   });
+
+// GET localhost:3000/trips/:tripId/edit
+app.get("/trips/:tripId/edit", async (req, res) => {
+    const foundTrip = await Trip.findById(req.params.tripId);
+    console.log(foundTrip);
+    res.render("trips/edit.ejs", {
+        trip: foundTrip,
+    });
+});
+
+//PUT Edit trip /trips/:tripId
+
+app.put("/trips/:tripId", async (req, res) => {
+    // Handle the 'caughtFish' checkbox data
+    if (req.body.caughtFish === "on") {
+        req.body.caughtFish = true;
+      } else {
+        req.body.caughtFish = false;
+      }
+    // Update the trip in the database
+    await Trip.findByIdAndUpdate(req.params.tripId, req.body);
+  
+    // Redirect to the trip's show page to see the updates
+    res.redirect(`/trips/${req.params.tripId}`);
+  });
+
 
 app.listen(3000, () => { //created an express web server where server.js is the main entry point and configuration file
     console.log("Listening on port 3000")

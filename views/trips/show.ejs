@@ -6,7 +6,7 @@
     <title><%= trip.date %></title>
   </head>
   <body>
-    <h1>Here Is Your Trip</h1>
+    <h1>Here Is Your Trip</h1><a href="/trips/<%= trip._id %>/edit">Edit <%= trip.name %></a>
     <p><%= trip.locationName %> <%= trip.date %></p>
     <p><%= trip.locationCoord %></p>
     <p>Catch Anything? <%= trip.caughtFish %></p>
@@ -15,6 +15,7 @@
     <form action="/trips/<%=trip._id%>?_method=DELETE" method="POST">
         <button type="submit">Delete <%= trip.name %></button>
       </form>
+    <br>
     <a href="/trips/">Back to Trips</a>
   </body>
 </html>
