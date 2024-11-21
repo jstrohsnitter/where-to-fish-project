@@ -1,10 +1,10 @@
 const mongoose = require("mongoose");
 
-// const fishSchema = new mongoose.Schema({
-//     species: String,
-//     size: String,
-//     tackle: String,
-// })
+const fishSchema = new mongoose.Schema({
+    species: String,
+    size: String,
+    tackle: String,
+})
 
 
 const tripSchema = new mongoose.Schema({
@@ -12,7 +12,7 @@ const tripSchema = new mongoose.Schema({
     locationName: String,
     locationCoord: String,
     caughtFish: Boolean,
-    ////fishInfo: [fishSchema],
+    fishInfo: [fishSchema],
     timeArrived: String,
     timeDeparted: String,
 });

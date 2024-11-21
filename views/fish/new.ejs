@@ -8,7 +8,7 @@
     <body>
         <h1>Log a New Fish!</h1>
     
-        <form action="/fish" method="POST">
+        <form action="/trips/<%= trip._id %>/fish" method="POST">
             <label for="species">Species:</label>
             <input type="text" name="species" id="species" />
     
@@ -17,9 +17,6 @@
     
             <label for="tackle">Tackle:</label>
             <input type="text" name="tackle" id="tackle" />
-
-            <label for="tripId">Trip ID:</label>
-            <input type="text" name="tripId" id="tripId" value="<%= trip._id %>" />
         
             <button type="submit">Log Fish</button>
         </form>

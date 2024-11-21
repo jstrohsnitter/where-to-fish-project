@@ -10,6 +10,12 @@
     <p><%= trip.locationName %> <%= trip.date %></p>
     <p><%= trip.locationCoord %></p>
     <p>Catch Anything? <%= trip.caughtFish %></p>
+    <p>Fish: </p>
+    <ul>
+        <% trip.fishInfo.forEach(banana => { %>
+          <li><%= banana.species %>, <%= banana.size %>", <%= banana.tackle %></li>
+        <% }); %>
+    </ul>
     <% if (trip.caughtFish) { %>
     <a href="/trips/<%=trip._id%>/fish/new">Log a Fish</a>
     <% } %>

@@ -23,24 +23,6 @@ app.get("/", async (req, res) => {
     res.render("index.ejs")
 })
 
-//GET /fish/new
-app.get("/trips/:tripId/fish/new", async (req, res) => {
-    const foundTrip = await Trip.findById(req.params.tripId);
-    res.render("fish/new.ejs", {trip: foundTrip})
-})
-
-// POST /fish
-app.post("/fish", async (req, res) => {
-      await Fish.create(req.body);
-      const fishId = (req.params.fishId)
-      const updatedFish = await Fish.findByIdAndUpdate(
-        fishId,
-        {assignee: (req.params.tripId)},
-        {new:true}
-      );
-      res.redirect("/trips");
-  });
-
 // GET /trips <----- Do this for fish under log a fish in trips/:tripId
 app.get("/trips", async (req, res) => {
     const allTrips = await Trip.find();
@@ -68,8 +50,7 @@ app.post("/trips", async (req, res) => {
   //GET /trips/:tripId
   app.get("/trips/:tripId", async (req,res) => {
     const foundTrip = await Trip.findById(req.params.tripId);
-    const foundFish = await Fish.find(req.params.tripId); // this finds a string of the trip Id. it can't be turned into fish because it is a string not an object.  don't know how to retrieve the whole object
-    res.render("trips/show.ejs", { trip: foundTrip, fish: foundFish});
+    res.render("trips/show.ejs", {trip: foundTrip});
   })
 
 //DELETE Trip
@@ -88,7 +69,6 @@ app.get("/trips/:tripId/edit", async (req, res) => {
 });
 
 //PUT Edit trip /trips/:tripId
-
 app.put("/trips/:tripId", async (req, res) => {
     // Handle the 'caughtFish' checkbox data
     if (req.body.caughtFish === "on") {
@@ -98,9 +78,24 @@ app.put("/trips/:tripId", async (req, res) => {
       }
     // Update the trip in the database
     await Trip.findByIdAndUpdate(req.params.tripId, req.body);
-  
     // Redirect to the trip's show page to see the updates
     res.redirect(`/trips/${req.params.tripId}`);
+  });
+
+  //GET /fish/new
+app.get("/trips/:tripId/fish/new", async (req, res) => {
+    const foundTrip = await Trip.findById(req.params.tripId);
+    res.render("fish/new.ejs", {trip: foundTrip})
+})
+
+// POST /fish
+app.post("/trips/:tripId/fish", async (req, res) => {
+      const newFishData = await Fish.create(req.body);
+      const tripToUpdate = await Trip.findById(req.params.tripId)
+      const newFish = tripToUpdate.fishInfo.push(newFishData)
+      await tripToUpdate.save()
+      console.log(newFish)
+      res.redirect(`/trips/${req.params.tripId}`);
   });
 
 
@@ -114,3 +109,12 @@ app.listen(3000, () => { //created an express web server where server.js is the 
        // //app.get("/trips/:tripId/fish/new", (req, res) => {
           // // console.log("new fish");
            ////res.render("fish/new.ejs");
+
+      // //const fishId = (req.params.fishId)
+    // //  const updatedFish = await Fish.findByIdAndUpdate(
+    //   //  fishId,
+    //   //  {assignee: (req.params.tripId)},
+    //   //  {new:true}
+    // //  );
+
+    // // const foundFish = await Fish.find(req.params.tripId); // this finds a string of the trip Id. it can't be turned into fish because it is a string not an object.  don't know how to retrieve the whole object
