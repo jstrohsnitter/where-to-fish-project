@@ -10,6 +10,9 @@
     <p><%= trip.locationName %> <%= trip.date %></p>
     <p><%= trip.locationCoord %></p>
     <p>Catch Anything? <%= trip.caughtFish %></p>
+    <% if (trip.caughtFish) { %>
+    <a href="/trips/<%=trip._id%>/fish/new">Log a Fish</a>
+    <% } %>
     <p>Arrival: <%= trip.timeArrived %></p>
     <p>Departure: <%= trip.timeDeparted %></p>
     <form action="/trips/<%=trip._id%>?_method=DELETE" method="POST">

@@ -12,6 +12,7 @@ mongoose.connection.on("connected", () => {
   });
 
 const Trip = require("./models/trip.js")
+const Fish = require("./models/fish.js")
 
 //Middleware
 app.use(express.urlencoded({ extended: false }));
@@ -22,7 +23,25 @@ app.get("/", async (req, res) => {
     res.render("index.ejs")
 })
 
-// GET /trips
+//GET /fish/new
+app.get("/trips/:tripId/fish/new", async (req, res) => {
+    const foundTrip = await Trip.findById(req.params.tripId);
+    res.render("fish/new.ejs", {trip: foundTrip})
+})
+
+// POST /fish
+app.post("/fish", async (req, res) => {
+      await Fish.create(req.body);
+      const fishId = (req.params.fishId)
+      const updatedFish = await Fish.findByIdAndUpdate(
+        fishId,
+        {assignee: (req.params.tripId)},
+        {new:true}
+      );
+      res.redirect("/trips");
+  });
+
+// GET /trips <----- Do this for fish under log a fish in trips/:tripId
 app.get("/trips", async (req, res) => {
     const allTrips = await Trip.find();
     const allTripsSorted = await allTrips.sort((a, b) => new Date(b.date) - new Date(a.date)); //got help from stack overflow with this one. the Date creates a string out of a,b.date. the new turns it into an object. the date alone is a utility function, and spits out the current date and time.  with the new operator, the date turns into a constructor function, and converts the a.date and b.date strings into objects to be sorted 
@@ -39,11 +58,6 @@ app.get("/trips/new", (req, res) => {
 app.post("/trips", async (req, res) => {
     if (req.body.caughtFish === "on") {
         req.body.caughtFish = true;
-        // res.redirect("/trips/:tripId/fish/new") need to check whether the s on trips on line 30 effects this code
-        // //app.get("/trips/:tripId/fish/new", (req, res) => {
-        //   //  console.log("new fish");
-        //     //res.send("new fish")
-        //})
       } else {
         req.body.caughtFish = false;
       }
@@ -54,7 +68,8 @@ app.post("/trips", async (req, res) => {
   //GET /trips/:tripId
   app.get("/trips/:tripId", async (req,res) => {
     const foundTrip = await Trip.findById(req.params.tripId);
-    res.render("trips/show.ejs", { trip: foundTrip});
+    const foundFish = await Fish.find(req.params.tripId); // this finds a string of the trip Id. it can't be turned into fish because it is a string not an object.  don't know how to retrieve the whole object
+    res.render("trips/show.ejs", { trip: foundTrip, fish: foundFish});
   })
 
 //DELETE Trip
@@ -92,3 +107,10 @@ app.put("/trips/:tripId", async (req, res) => {
 app.listen(3000, () => { //created an express web server where server.js is the main entry point and configuration file
     console.log("Listening on port 3000")
 })
+
+//===================================TRASH====================================
+
+     //  // res.redirect("/trips/:tripId/fish/new") //need to check whether the s on trips on line 30 effects this code
+       // //app.get("/trips/:tripId/fish/new", (req, res) => {
+          // // console.log("new fish");
+           ////res.render("fish/new.ejs");

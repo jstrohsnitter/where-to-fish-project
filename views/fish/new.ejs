@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+    <body>
+        <h1>Log a New Fish!</h1>
+    
+        <form action="/fish" method="POST">
+            <label for="species">Species:</label>
+            <input type="text" name="species" id="species" />
+    
+            <label for="size">Size (inches):</label>
+            <input type="text" name="size" id="size" />
+    
+            <label for="tackle">Tackle:</label>
+            <input type="text" name="tackle" id="tackle" />
+
+            <label for="tripId">Trip ID:</label>
+            <input type="text" name="tripId" id="tripId" value="<%= trip._id %>" />
+        
+            <button type="submit">Log Fish</button>
+        </form>
+          <a href="/trips/">Back to Trips</a>
+      </body>
+</html>
