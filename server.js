@@ -5,6 +5,7 @@ const mongoose = require("mongoose"); //require package
 const methodOverride = require("method-override"); 
 const morgan = require("morgan"); 
 const app = express();
+const axios = require("axios");
 
 mongoose.connect(process.env.MONGODB_URI); //connect to mongoDB using the connection string in the .env file
 mongoose.connection.on("connected", () => {
@@ -13,8 +14,11 @@ mongoose.connection.on("connected", () => {
 
 const Trip = require("./models/trip.js")
 const Fish = require("./models/fish.js")
+const Weather = require("./models/weather.js")
+
 
 //Middleware
+app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(methodOverride("_method")); // new
 // //app.use(morgan("dev")); 
@@ -98,6 +102,44 @@ app.post("/trips/:tripId/fish", async (req, res) => {
       res.redirect(`/trips/${req.params.tripId}`);
   });
 
+// Route to fetch and store data from external API
+app.get("/fetch-api-data", async (req, res) => {
+    
+    let data = JSON.stringify({
+      "lat": 41.363,
+      "lon": -71.48,
+      "model": "gfsWave",
+      "parameters": [
+        "waves"
+      ],
+      "levels": [
+        "surface"
+      ],
+      "key": "CGSJWdI2k43RDFeHmw8fidU3AzubK2r9"
+    });
+    
+    let config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      url: 'https://api.windy.com/api/point-forecast/v2',
+      headers: { 
+        'Content-Type': 'application/json'
+      },
+      data : data
+    };
+    
+    axios.request(config)
+    .then((response) => {
+        const waves = response.data["waves_height-surface"]
+        wavesString = JSON.stringify(waves)
+      res.send(`${wavesString}`)
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+    
+});
+
 
 app.listen(3000, () => { //created an express web server where server.js is the main entry point and configuration file
     console.log("Listening on port 3000")
@@ -118,3 +160,22 @@ app.listen(3000, () => { //created an express web server where server.js is the 
     // //  );
 
     // // const foundFish = await Fish.find(req.params.tripId); // this finds a string of the trip Id. it can't be turned into fish because it is a string not an object.  don't know how to retrieve the whole object
+
+    // try {
+    //     const response = await axios.get("https://api.windy.com/api/point-forecast/v2");
+    //     const apiData = response.data;
+
+    //     const savedItems = await Weather.insertMany(
+    //         apiData.map((item) => ({
+    //             timeStamp: [item.ts],
+    //             units: item.units,
+    //             waveHeight: [item.waves_height-surface],
+    //             waveDirection: [item.waves_direction-surface],
+    //             wavePeriod: [item.waves_Period-surface],
+    //         }))
+    //     );
+    //     res.status(200).json({ message: "Data fetched and saved successfully", savedItems });
+    // }   catch (error) {
+    //     console.error("Error fetching API data:", error.message);
+    //     res.status(500).json({ error: "Failed to fetch API data" });
+    //   }
