@@ -130,9 +130,54 @@ app.get("/fetch-api-data", async (req, res) => {
     
     axios.request(config)
     .then((response) => {
-        const waves = response.data["waves_height-surface"]
-        wavesString = JSON.stringify(waves)
-      res.send(`${wavesString}`)
+        const waveHeight = response.data["waves_height-surface"]
+        const waveDirection = response.data["waves_direction-surface"]
+        const wavePeriod = response.data["waves_period-surface"]
+        function calculateSumHeight() {
+        let sum = 0
+        waveHeight.forEach(banana => {
+            sum += banana
+        });
+        return sum
+        }
+        const waveSum = calculateSumHeight(waveHeight)
+        function calculateAverageHeight() {
+            return waveSum / waveHeight.length
+        }
+        const waveHeightAverage = calculateAverageHeight()
+            console.log("Average:", waveHeightAverage);
+
+        function calculateSumDirection() {
+            let sum = 0
+            waveDirection.forEach(banana => {
+                 sum += banana
+            });
+            return sum
+            }
+            const waveSumDirection = calculateSumDirection(waveDirection)
+            function calculateAverageDirection() {
+                return waveSumDirection / waveDirection.length
+                }
+            const waveDirectionAverage = calculateAverageDirection()
+        console.log("Average:", waveDirectionAverage);
+
+        function calculateSumPeriod() {
+            let sum = 0
+            wavePeriod.forEach(banana => {
+                 sum += banana
+            });
+            return sum
+            }
+            const waveSumPeriod = calculateSumPeriod(wavePeriod)
+            function calculateAveragePeriod() {
+                return waveSumPeriod / wavePeriod.length
+                }
+            const wavePeriodAverage = calculateAveragePeriod()
+        console.log("Average:", wavePeriodAverage);
+        
+    
+        
+      res.send(`Average Wave Height:${waveHeightAverage} meters`)
     })
     .catch((error) => {
       console.log(error);
