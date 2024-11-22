@@ -21,7 +21,7 @@ async function initMap() {
       // Close the current InfoWindow.
       infoWindow.close();
 
-    // Update global latitude and longitude
+    // Update global latitude and longitude FROM CHAT GPT
     const clickedLatLng = mapsMouseEvent.latLng.toJSON();
     globalLat = clickedLatLng.lat;
     globalLng = clickedLatLng.lng;
