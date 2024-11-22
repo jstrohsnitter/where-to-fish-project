@@ -6,6 +6,8 @@ const methodOverride = require("method-override");
 const morgan = require("morgan"); 
 const app = express();
 const axios = require("axios");
+const {google} = require('googleapis');
+const {authenticate} = require('@google-cloud/local-auth');
 
 mongoose.connect(process.env.MONGODB_URI); //connect to mongoDB using the connection string in the .env file
 mongoose.connection.on("connected", () => {
@@ -268,13 +270,13 @@ app.post("/trips/:tripId/fish", async (req, res) => {
       res.redirect(`/trips/${req.params.tripId}`);
   });
 
-// Route to fetch and store data from external API
-////app.get("/fetch-api-data", async (req, res) => {
-    
+//GET /maps
+////app.get("/maps", async (req,res) => {
+    // Initialize and add the map
 
-    
-//});
-
+    // [END maps_add_map]
+ //   res.render("/maps.ejs")
+//})
 
 app.listen(3000, () => { //created an express web server where server.js is the main entry point and configuration file
     console.log("Listening on port 3000")
