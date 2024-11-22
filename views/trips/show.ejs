@@ -10,17 +10,20 @@
     <p><%= trip.locationName %> <%= trip.date %></p>
     <p><%= trip.locationCoord %></p>
     <p>Catch Anything? <%= trip.caughtFish %></p>
+    <% if (trip.caughtFish) { %>
     <p>Fish: </p>
     <ul>
         <% trip.fishInfo.forEach(banana => { %>
           <li><%= banana.species %>, <%= banana.size %>", <%= banana.tackle %></li>
         <% }); %>
     </ul>
-    <% if (trip.caughtFish) { %>
     <a href="/trips/<%=trip._id%>/fish/new">Log a Fish</a>
     <% } %>
     <p>Arrival: <%= trip.timeArrived %></p>
     <p>Departure: <%= trip.timeDeparted %></p>
+    <p>Wave Height: <%= trip.weatherInfo[0].waveHeight %> meters</p>
+    <p>Wave Direction: <%= trip.weatherInfo[0].waveDirection %> degrees</p>
+    <p>Wave Period: <%= trip.weatherInfo[0].wavePeriod %> seconds</p>
     <form action="/trips/<%=trip._id%>?_method=DELETE" method="POST">
         <button type="submit">Delete <%= trip.name %></button>
       </form>

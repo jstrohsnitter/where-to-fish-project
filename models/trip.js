@@ -6,6 +6,11 @@ const fishSchema = new mongoose.Schema({
     tackle: String,
 })
 
+const weatherSchema = new mongoose.Schema({
+    waveHeight: String,
+    waveDirection: String,
+    wavePeriod: String,
+})
 
 const tripSchema = new mongoose.Schema({
     date: String,
@@ -15,6 +20,7 @@ const tripSchema = new mongoose.Schema({
     fishInfo: [fishSchema],
     timeArrived: String,
     timeDeparted: String,
+    weatherInfo: [weatherSchema]
 });
 
 const Trip = mongoose.model("Trip", tripSchema); 

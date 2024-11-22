@@ -22,7 +22,85 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(methodOverride("_method")); // new
 // //app.use(morgan("dev")); 
+//==========================================FETCHING WAVE DATA FROM WINDY API===================================================
+let data = JSON.stringify({
+    "lat": 41.363,
+    "lon": -71.48,
+    "model": "gfsWave",
+    "parameters": [
+      "waves"
+    ],
+    "levels": [
+      "surface"
+    ],
+    "key": "CGSJWdI2k43RDFeHmw8fidU3AzubK2r9"
+  });
+  
+  let config = {
+    method: 'post',
+    maxBodyLength: Infinity,
+    url: 'https://api.windy.com/api/point-forecast/v2',
+    headers: { 
+      'Content-Type': 'application/json'
+    },
+    data : data
+  };
+  
+  axios.request(config)
+  .then((response) => {
+      const waveHeight = response.data["waves_height-surface"]
+      const waveDirection = response.data["waves_direction-surface"]
+      const wavePeriod = response.data["waves_period-surface"]
+      function calculateSumHeight() {
+      let sum = 0
+      waveHeight.forEach(banana => {
+          sum += banana
+      });
+      return sum
+      }
+      const waveSum = calculateSumHeight(waveHeight)
+      function calculateAverageHeight() {
+          return waveSum / waveHeight.length
+      }
+      const waveHeightAverage = calculateAverageHeight()
+          console.log("Wave Height Average:", waveHeightAverage);
 
+      function calculateSumDirection() {
+          let sum = 0
+          waveDirection.forEach(banana => {
+               sum += banana
+          });
+          return sum
+          }
+          const waveSumDirection = calculateSumDirection(waveDirection)
+          function calculateAverageDirection() {
+              return waveSumDirection / waveDirection.length
+              }
+          const waveDirectionAverage = calculateAverageDirection()
+      console.log("Wave Direction Average:", waveDirectionAverage);
+
+      function calculateSumPeriod() {
+          let sum = 0
+          wavePeriod.forEach(banana => {
+               sum += banana
+          });
+          return sum
+          }
+          const waveSumPeriod = calculateSumPeriod(wavePeriod)
+          function calculateAveragePeriod() {
+              return waveSumPeriod / wavePeriod.length
+              }
+          const wavePeriodAverage = calculateAveragePeriod()
+      console.log("Wave Period Average:", wavePeriodAverage);
+      
+  
+      
+    //res.send(`Average Wave Height:${waveHeightAverage} meters`)
+  })
+  .catch((error) => {
+    console.log(error);
+  });
+//=====================================================================================================================================================================
 app.get("/", async (req, res) => {
     res.render("index.ejs")
 })
@@ -54,8 +132,90 @@ app.post("/trips", async (req, res) => {
   //GET /trips/:tripId
   app.get("/trips/:tripId", async (req,res) => {
     const foundTrip = await Trip.findById(req.params.tripId);
+     let data = JSON.stringify({
+        "lat": 41.363,
+        "lon": -71.48,
+        "model": "gfsWave",
+        "parameters": [
+          "waves"
+        ],
+        "levels": [
+          "surface"
+        ],
+        "key": "CGSJWdI2k43RDFeHmw8fidU3AzubK2r9"
+      });
+      
+      let config = {
+        method: 'post',
+        maxBodyLength: Infinity,
+        url: 'https://api.windy.com/api/point-forecast/v2',
+        headers: { 
+          'Content-Type': 'application/json'
+        },
+        data : data
+      };
+      
+      axios.request(config)
+      .then((response) => {
+          const waveHeight = response.data["waves_height-surface"]
+          const waveDirection = response.data["waves_direction-surface"]
+          const wavePeriod = response.data["waves_period-surface"]
+          function calculateSumHeight() {
+          let sum = 0
+          waveHeight.forEach(banana => {
+              sum += banana
+          });
+          return sum
+          }
+          const waveSum = calculateSumHeight(waveHeight)
+          function calculateAverageHeight() {
+              return waveSum / waveHeight.length
+          }
+          const waveHeightAverage = calculateAverageHeight()
+              console.log("Wave Height Average:", waveHeightAverage);
+    
+          function calculateSumDirection() {
+              let sum = 0
+              waveDirection.forEach(banana => {
+                   sum += banana
+              });
+              return sum
+              }
+              const waveSumDirection = calculateSumDirection(waveDirection)
+              function calculateAverageDirection() {
+                  return waveSumDirection / waveDirection.length
+                  }
+              const waveDirectionAverage = calculateAverageDirection()
+          console.log("Wave Direction Average:", waveDirectionAverage);
+    
+          function calculateSumPeriod() {
+              let sum = 0
+              wavePeriod.forEach(banana => {
+                   sum += banana
+              });
+              return sum
+              }
+              const waveSumPeriod = calculateSumPeriod(wavePeriod)
+              function calculateAveragePeriod() {
+                  return waveSumPeriod / wavePeriod.length
+                  }
+              const wavePeriodAverage = calculateAveragePeriod()
+          console.log("Wave Period Average:", wavePeriodAverage);
+        function roundToThousandth(num) {
+            return Math.round(num * 1000) / 1000;
+          }
+      const height = roundToThousandth(waveHeightAverage)
+      const direction = roundToThousandth(waveDirectionAverage)
+      const period = roundToThousandth(wavePeriodAverage)
+      const averages = { "waveHeight": height, "waveDirection" : direction, "wavePeriod" : period }
+      console.log(averages) 
+      //const averagesString = JSON.stringify(averages)   
+      const newWeather = foundTrip.weatherInfo.push(averages); //had to set this as a new variable in order to push the averages to the model
+      console.log(newWeather)
+      foundTrip.save()
     res.render("trips/show.ejs", {trip: foundTrip});
   })
+})
 
 //DELETE Trip
 app.delete("/trips/:tripId", async (req, res) => {
@@ -103,87 +263,11 @@ app.post("/trips/:tripId/fish", async (req, res) => {
   });
 
 // Route to fetch and store data from external API
-app.get("/fetch-api-data", async (req, res) => {
+////app.get("/fetch-api-data", async (req, res) => {
     
-    let data = JSON.stringify({
-      "lat": 41.363,
-      "lon": -71.48,
-      "model": "gfsWave",
-      "parameters": [
-        "waves"
-      ],
-      "levels": [
-        "surface"
-      ],
-      "key": "CGSJWdI2k43RDFeHmw8fidU3AzubK2r9"
-    });
-    
-    let config = {
-      method: 'post',
-      maxBodyLength: Infinity,
-      url: 'https://api.windy.com/api/point-forecast/v2',
-      headers: { 
-        'Content-Type': 'application/json'
-      },
-      data : data
-    };
-    
-    axios.request(config)
-    .then((response) => {
-        const waveHeight = response.data["waves_height-surface"]
-        const waveDirection = response.data["waves_direction-surface"]
-        const wavePeriod = response.data["waves_period-surface"]
-        function calculateSumHeight() {
-        let sum = 0
-        waveHeight.forEach(banana => {
-            sum += banana
-        });
-        return sum
-        }
-        const waveSum = calculateSumHeight(waveHeight)
-        function calculateAverageHeight() {
-            return waveSum / waveHeight.length
-        }
-        const waveHeightAverage = calculateAverageHeight()
-            console.log("Average:", waveHeightAverage);
 
-        function calculateSumDirection() {
-            let sum = 0
-            waveDirection.forEach(banana => {
-                 sum += banana
-            });
-            return sum
-            }
-            const waveSumDirection = calculateSumDirection(waveDirection)
-            function calculateAverageDirection() {
-                return waveSumDirection / waveDirection.length
-                }
-            const waveDirectionAverage = calculateAverageDirection()
-        console.log("Average:", waveDirectionAverage);
-
-        function calculateSumPeriod() {
-            let sum = 0
-            wavePeriod.forEach(banana => {
-                 sum += banana
-            });
-            return sum
-            }
-            const waveSumPeriod = calculateSumPeriod(wavePeriod)
-            function calculateAveragePeriod() {
-                return waveSumPeriod / wavePeriod.length
-                }
-            const wavePeriodAverage = calculateAveragePeriod()
-        console.log("Average:", wavePeriodAverage);
-        
     
-        
-      res.send(`Average Wave Height:${waveHeightAverage} meters`)
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-    
-});
+//});
 
 
 app.listen(3000, () => { //created an express web server where server.js is the main entry point and configuration file
@@ -223,4 +307,4 @@ app.listen(3000, () => { //created an express web server where server.js is the 
     // }   catch (error) {
     //     console.error("Error fetching API data:", error.message);
     //     res.status(500).json({ error: "Failed to fetch API data" });
-    //   }
+    //  // }
