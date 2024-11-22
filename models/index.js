@@ -1,3 +1,6 @@
+let globalLat = null;
+let globalLng = null;
+
 async function initMap() {
     // Request needed libraries.
     const { Map } = await google.maps.importLibrary("maps");
@@ -17,6 +20,13 @@ async function initMap() {
     map.addListener("click", (mapsMouseEvent) => {
       // Close the current InfoWindow.
       infoWindow.close();
+
+    // Update global latitude and longitude
+    const clickedLatLng = mapsMouseEvent.latLng.toJSON();
+    globalLat = clickedLatLng.lat;
+    globalLng = clickedLatLng.lng;
+
+    console.log(`Latitude: ${globalLat}, Longitude: ${globalLng}`);
       // Create a new InfoWindow.
       infoWindow = new google.maps.InfoWindow({
         position: mapsMouseEvent.latLng,
