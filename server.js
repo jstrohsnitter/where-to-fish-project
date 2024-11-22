@@ -23,7 +23,83 @@ app.use(express.urlencoded({ extended: false }));
 app.use(methodOverride("_method")); // new
 // //app.use(morgan("dev")); 
 //==========================================FETCHING WAVE DATA FROM WINDY API===================================================
-
+// if(req.params.tripId.weatherInfo.length < 1) {
+//     function getData() {
+//     let data = JSON.stringify({
+//         "lat": 41.363,
+//         "lon": -71.48,
+//         "model": "gfsWave",
+//         "parameters": [
+//           "waves"
+//         ],
+//         "levels": [
+//           "surface"
+//         ],
+//         "key": "CGSJWdI2k43RDFeHmw8fidU3AzubK2r9"
+//       });
+      
+//       let config = {
+//         method: 'post',
+//         maxBodyLength: Infinity,
+//         url: 'https://api.windy.com/api/point-forecast/v2',
+//         headers: { 
+//           'Content-Type': 'application/json'
+//         },
+//         data : data
+//       };
+      
+//       axios.request(config)
+//       .then((response) => {
+//           const waveHeight = response.data["waves_height-surface"]
+//           const waveDirection = response.data["waves_direction-surface"]
+//           const wavePeriod = response.data["waves_period-surface"]
+//           function calculateSumHeight() {
+//           let sum = 0
+//           waveHeight.forEach(banana => {
+//               sum += banana
+//           });
+//           return sum
+//           }
+//           const waveSum = calculateSumHeight(waveHeight)
+//           function calculateAverageHeight() {
+//               return waveSum / waveHeight.length
+//           }
+//           const waveHeightAverage = calculateAverageHeight()
+//               console.log("Wave Height Average:", waveHeightAverage);
+    
+//           function calculateSumDirection() {
+//               let sum = 0
+//               waveDirection.forEach(banana => {
+//                    sum += banana
+//               });
+//               return sum
+//               }
+//               const waveSumDirection = calculateSumDirection(waveDirection)
+//               function calculateAverageDirection() {
+//                   return waveSumDirection / waveDirection.length
+//                   }
+//               const waveDirectionAverage = calculateAverageDirection()
+//           console.log("Wave Direction Average:", waveDirectionAverage);
+    
+//           function calculateSumPeriod() {
+//               let sum = 0
+//               wavePeriod.forEach(banana => {
+//                    sum += banana
+//               });
+//               return sum
+//               }
+//               const waveSumPeriod = calculateSumPeriod(wavePeriod)
+//               function calculateAveragePeriod() {
+//                   return waveSumPeriod / wavePeriod.length
+//                   }
+//               const wavePeriodAverage = calculateAveragePeriod()
+//           console.log("Wave Period Average:", wavePeriodAverage);
+//       })
+//       .catch((error) => {
+//         console.log(error);
+//       });
+//     } getData()
+//     } 
 //=====================================================================================================================================================================
 app.get("/", async (req, res) => {
     res.render("index.ejs")
@@ -56,6 +132,8 @@ app.post("/trips", async (req, res) => {
   //GET /trips/:tripId
   app.get("/trips/:tripId", async (req,res) => {
     const foundTrip = await Trip.findById(req.params.tripId);
+    if(foundTrip.weatherInfo.length < 1) {
+        function getData() {
      let data = JSON.stringify({
         "lat": 41.363,
         "lon": -71.48,
@@ -138,8 +216,12 @@ app.post("/trips", async (req, res) => {
       console.log(newWeather)
       foundTrip.save()
     res.render("trips/show.ejs", {trip: foundTrip});
-  })
-})
+  }) //then response close function syntax
+} getData()// getData closing bracket
+    } else { //if closing bracket, else for rendering page
+        res.render("trips/show.ejs", {trip: foundTrip});
+    }
+}) //app.post closing syntax
 
 //DELETE Trip
 app.delete("/trips/:tripId", async (req, res) => {
