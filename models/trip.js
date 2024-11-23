@@ -15,7 +15,8 @@ const weatherSchema = new mongoose.Schema({
 const tripSchema = new mongoose.Schema({
     date: String,
     locationName: String,
-    locationCoord: String,
+    latitude: Number,
+    longitude: Number,
     caughtFish: Boolean,
     fishInfo: [fishSchema],
     timeArrived: String,

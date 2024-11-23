@@ -9,8 +9,12 @@ const axios = require("axios");
 const {google} = require('googleapis');
 const {authenticate} = require('@google-cloud/local-auth');
 const path = require('path');
-let globalLat = 0;
-let globalLng = 0;
+const bodyParser = require('body-parser'); //LOOK THIS UP
+let lat = 0;
+let lng = 0;
+
+app.locals.lat = lat;
+app.locals.lng = lng;
 
 mongoose.connect(process.env.MONGODB_URI); //connect to mongoDB using the connection string in the .env file
 mongoose.connection.on("connected", () => {
@@ -27,7 +31,19 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(methodOverride("_method")); // new
 app.use(express.static('public'));
+app.use(bodyParser.json()); //LOOK THIS UP
 // //app.use(morgan("dev")); 
+
+app.post('/save-coordinates', (req, res) => { //LOOK ALL THIS UP
+    const { lat, lng } = req.body; // Extract latitude and longitude from request body
+
+    console.log(`Received coordinates: Latitude=${lat}, Longitude=${lng}`);
+
+    // Example: Store or process the coordinates as needed
+    // You can save them to a database, file, or use them immediately
+
+    res.json({ message: 'Coordinates received successfully!', received: { lat, lng } });
+});
 
 app.get("/", async (req, res) => {
     res.render("index.ejs")

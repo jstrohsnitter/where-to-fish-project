@@ -27,6 +27,18 @@ async function initMap() {
     globalLng = clickedLatLng.lng;
 
     console.log(`Latitude: ${globalLat}, Longitude: ${globalLng}`);
+
+    // Send the coordinates to the server LOOK THIS UP
+    fetch('http://localhost:3000/save-coordinates', {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ lat: globalLat, lng: globalLng }),
+  })
+  .then((response) => response.json())
+  .then((data) => console.log('Server response:', data))
+  .catch((error) => console.error('Error:', error));
       // Create a new InfoWindow.
       infoWindow = new google.maps.InfoWindow({
         position: mapsMouseEvent.latLng,
