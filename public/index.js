@@ -1,5 +1,5 @@
-let globalLat = null;
-let globalLng = null;
+let globalLat = 0;
+let globalLng = 0;
 
 async function initMap() {
     // Request needed libraries.
@@ -21,8 +21,8 @@ async function initMap() {
       // Close the current InfoWindow.
       infoWindow.close();
 
-    // Update global latitude and longitude FROM CHAT GPT
-    const clickedLatLng = mapsMouseEvent.latLng.toJSON();
+    //Update global latitude and longitude FROM CHAT GPT
+    const clickedLatLng = mapsMouseEvent.latLng.toJSON(); //this moethod returns a copy of the attributes as an object and sets them as a variable so they can be accessed later
     globalLat = clickedLatLng.lat;
     globalLng = clickedLatLng.lng;
 
