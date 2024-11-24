@@ -1,4 +1,18 @@
 #map {
-    height: 400px; /* The height is 400 pixels */
+    height: 300px; /* The height is 400 pixels */
     width: 100%; /* The width is the width of the web page */
+}
+
+#home-body {
+    background: #fff8ed;
+    font-family: "DM Sans", sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    max-width: 100vw;
+  }
+
+#courtfish {
+    height: 300px
 }
