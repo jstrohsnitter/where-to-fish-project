@@ -99,7 +99,7 @@ app.post("/trips", async (req, res) => {
         "levels": [
           "surface"
         ],
-        "key": "KEY"
+        "key": "CGSJWdI2k43RDFeHmw8fidU3AzubK2r9"
       });
       
       let config = {
