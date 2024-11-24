@@ -10,11 +10,11 @@ const {google} = require('googleapis');
 const {authenticate} = require('@google-cloud/local-auth');
 const path = require('path');
 const bodyParser = require('body-parser'); //LOOK THIS UP
-let lat = 0;
-let lng = 0;
-
-app.locals.lat = lat;
-app.locals.lng = lng;
+let globalLat = 0;
+let globalLng = 0;
+console.log(`Latitude: ${globalLat}, Longitude: ${globalLng}`);
+app.locals.lat = globalLat;
+app.locals.lng = globalLng;
 
 mongoose.connect(process.env.MONGODB_URI); //connect to mongoDB using the connection string in the .env file
 mongoose.connection.on("connected", () => {
@@ -38,7 +38,8 @@ app.post('/save-coordinates', (req, res) => { //LOOK ALL THIS UP
     const { lat, lng } = req.body; // Extract latitude and longitude from request body
 
     console.log(`Received coordinates: Latitude=${lat}, Longitude=${lng}`);
-
+    globalLat = lat;
+    globalLng = lng;
     // Example: Store or process the coordinates as needed
     // You can save them to a database, file, or use them immediately
 
@@ -59,6 +60,13 @@ app.get("/trips", async (req, res) => {
 
 //GET /trips/new
 app.get("/trips/new", (req, res) => {
+    app.get('/get-coordinates', (req, res) => {
+        if (globalLatitude !== null && globalLongitude !== null) {
+            res.json({ lat: globalLat, lng: globalLng });
+        } else {
+            res.status(404).json({ error: 'No coordinates available' });
+        }
+    });
     res.render("trips/new.ejs")
 })
 
@@ -77,10 +85,13 @@ app.post("/trips", async (req, res) => {
   app.get("/trips/:tripId", async (req,res) => {
     const foundTrip = await Trip.findById(req.params.tripId);
     if(foundTrip.weatherInfo.length < 1) {
-        function getData() {
+      function getData() {
+     let lat = foundTrip.latitude;
+     let lng = foundTrip.longitude
+     console.log(`lat: ${lat}`)
      let data = JSON.stringify({
-        "lat": 41.363,
-        "lon": -71.48,
+        "lat": lat, //this doesn't work
+        "lon": lng, //this doesn't work
         "model": "gfsWave",
         "parameters": [
           "waves"
@@ -88,7 +99,7 @@ app.post("/trips", async (req, res) => {
         "levels": [
           "surface"
         ],
-        "key": "CGSJWdI2k43RDFeHmw8fidU3AzubK2r9"
+        "key": "KEY"
       });
       
       let config = {
@@ -101,7 +112,7 @@ app.post("/trips", async (req, res) => {
         data : data
       };
       
-      axios.request(config)
+      axios.request(config) //LOOK THIS UP!! WHAT IS AXIOS???? WHAT IS REQUEST(CONFIG)
       .then((response) => {
           const waveHeight = response.data["waves_height-surface"]
           const waveDirection = response.data["waves_direction-surface"]

@@ -8,7 +8,8 @@
   <body>
     <h1>Here Is Your Trip</h1><a href="/trips/<%= trip._id %>/edit">Edit <%= trip.name %></a>
     <p><%= trip.locationName %> <%= trip.date %></p>
-    <p><%= trip.locationCoord %></p>
+    <p><%= trip.latitude%></p>
+    <p><%= trip.longitude%></p>
     <p>Catch Anything? <%= trip.caughtFish %></p>
     <% if (trip.caughtFish) { %>
     <p>Fish: </p>
