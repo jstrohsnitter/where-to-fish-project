@@ -347,3 +347,33 @@ app.listen(3000, () => { //created an express web server where server.js is the 
 //     } getData()
 //     } 
 //=====================================================================================================================================================================
+
+// <body >
+    
+
+// <form action="/trips/<%=trip._id%>?_method=PUT"  method="POST">
+//     <label for="date">Date (MM/DD/YYYY):</label>
+//     <input type="text" name="date" id="editDate" value="<%= trip.date %>"/>
+
+//     <label for="locationName">Location Name:</label>
+//     <input type="text" name="locationName" id="editLocationName"  />
+
+//     <label for="latitude">Latitude:</label>
+//     <input type="text" name="latitude" id="latitude" />
+
+//     <label for="longitude">Longitude:</label>
+//     <input type="text" name="longitude" id="longitude" value="<%= trip.longitude %>"/>
+
+//     <label for="timeArrived">Time Arrived:</label>
+//     <input type="text" name="timeArrived" id="editTimeArrived" value="<%= trip.timeArrived %>"/>
+
+//     <label for="timeArrived">Time Departed:</label>
+//     <input type="text" name="timeDeparted" id="editTimeDeparted" value="<%= trip.timeDeparted %>"/>
+
+//     <label for="caughtFish">Catch Anything?</label>
+//     <input type="checkbox" name="caughtFish" id="editCaughtFish" <% if (trip.caughtFish) { %>checked<% } %> />
+
+//     <button type="submit">Update Trip</button>
+//   </form>
+//   <a href="/trips/">Back to Trips</a>
+// </body>

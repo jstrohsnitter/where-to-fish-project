@@ -95,7 +95,7 @@
     margin-top: 20px;
 }
 
-#new-trip-body {
+#new-trip-body, #edit-trip-body {
     background: #fff8ed;
     font-family: "DM Sans", sans-serif;
     display: flex;
@@ -103,7 +103,7 @@
     align-items: left;
     justify-content: center;
     max-width: 100vw;
-    line-height: 20px;
+    /* line-height: 20px; */
   }
 
   #log-new-trip {
@@ -116,6 +116,53 @@
     margin-bottom: 10px;
   }
 
-.list-group {
+  #trip-list-group{
+    width: 70px,
+  }
+
+/* .list-group {
     width: 30%;
+} */
+
+#show {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: left;
+  background: rgb(245, 236, 209);
+}
+
+#here {
+  border: 5px ridge rgb(188, 148, 0);
+  border-radius: 10%;
+  padding: 5px;
+}
+
+#show-name-date {
+  font-size: 25px;
+}
+
+#show-img-container {
+  margin-left: 300px;
+}
+
+#log-a-fish-button {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+#map-check-edit {
+  padding-bottom: 10px;
+}
+
+#edit-latitude {
+  padding-top: 10px;
+}
+
+#log-fish-button {
+  margin-bottom: 10px;
+}
+
+#species, #size, #tackle {
+  width: 200px
 }
