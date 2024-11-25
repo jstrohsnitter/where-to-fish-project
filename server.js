@@ -23,7 +23,6 @@ mongoose.connection.on("connected", () => {
 
 const Trip = require("./models/trip.js")
 const Fish = require("./models/fish.js")
-const Weather = require("./models/weather.js")
 
 
 //Middleware
