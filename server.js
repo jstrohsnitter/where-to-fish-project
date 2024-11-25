@@ -30,6 +30,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(methodOverride("_method")); // new
 app.use(express.static('public'));
+app.use(express.static('assets'));
 app.use(bodyParser.json()); //LOOK THIS UP
 // //app.use(morgan("dev")); 
 
