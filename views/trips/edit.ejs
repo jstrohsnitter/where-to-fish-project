@@ -10,36 +10,36 @@
   <body id="edit-trip-body">
     <h1>Edit <%= trip.date %> Trip</h1>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-    <form id="edit-trip-form" action="/trips" method="POST">
+    <form id="edit-trip-form" action="/trips/<%= trip._id %>?_method=PUT" method="POST">
       
         <a href="/maps/">Check on a Map!</a><br>
         <div class="form-floating mb-3" >
-          <input type="text" class="form-control" name="latitude" id="latitude" value="<%= trip.latitude %>"/><br>
+          <input type="text" class="form-control" name="latitude" id="edit-latitude" value="<%= trip.latitude %>"/><br>
           <label for="latitude">Latitude:</label>
         </div>
 
         <div class="form-floating mb-3" >
-        <input type="text" class="form-control" name="longitude" id="longitude" value="<%= trip.longitude %>"/><br>
+        <input type="text" class="form-control" name="longitude" id="edit-longitude" value="<%= trip.longitude %>"/><br>
         <label for="longitude">Longitude:</label>
         </div>
         
         <div class="form-floating mb-3" >
-        <input type="text" class="form-control" name="locationName" id="locationName" value="<%= trip.locationName %>"/><br>
+        <input type="text" class="form-control" name="locationName" id="edit-locationName" value="<%= trip.locationName %>"/><br>
         <label for="location-name">Location Name:</label>
         </div>
 
         <div class="form-floating mb-3" >
-        <input type="text" class="form-control" name="date" id="date" value="<%= trip.date %>"/><br> 
+        <input type="text" class="form-control" name="date" id="edit-date" value="<%= trip.date %>"/><br> 
         <label for="date">Date (MM/DD/YYYY):</label>
         </div>
       
         <div class="form-floating mb-3" >
-        <input type="text" class="form-control" name="timeArrived" id="timeArrived" value="<%= trip.timeArrived %>"/><br>
+        <input type="text" class="form-control" name="timeArrived" id="edit-timeArrived" value="<%= trip.timeArrived %>"/><br>
         <label for="time-arrived">Time Arrived:</label>
         </div>
 
         <div class="form-floating mb-3" >
-        <input type="text" class="form-control" name="timeDeparted" id="timeDeparted" value="<%= trip.timeDeparted %>"/><br>
+        <input type="text" class="form-control" name="timeDeparted" id="edit-timeDeparted" value="<%= trip.timeDeparted %>"/><br>
         <label for="time-arrived">Time Departed:</label>
         </div>
         
@@ -51,6 +51,6 @@
         </div>
 
       </form>
-      <a href="/trips/" type="button" class="btn btn-outline-primary" id="back-to-trips">Back to Trips</a>
+      <a href="/trips/" type="button" class="btn btn-outline-primary" id="edit-back-to-trips">Back to Trips</a>
   </body>
 </html>
