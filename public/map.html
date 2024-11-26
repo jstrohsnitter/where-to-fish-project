@@ -10,13 +10,14 @@
     <title>Add Map</title>
 
     <link rel="stylesheet" type="text/css" href="/style.css" />
+    <script type="module" src="/link.js"></script>
     <script type="module" src="/index.js"></script>
   </head>
-  <body>
+  <body id="google-map">
     <h3>Where did you fish?</h3><a href="/trips/new">Set these coordinates for your trip</a>
     <div id="map"></div>
     <!-- Replace the value of the key parameter with your own API key. -->
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAghi8qsXiYpyCg6mlq5Ch91KVwqvzZPDc&callback=initMap" async defer></script>
+    <script async defer id="google-script"></script>
   </body>
   <style>
     #map {

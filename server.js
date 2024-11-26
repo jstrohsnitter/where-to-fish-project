@@ -225,9 +225,39 @@ app.post("/trips/:tripId/fish", async (req, res) => {
 
 
 //GET /maps
-app.get("/maps", async (req,res) => {
-   res.sendFile("/Users/macbook/code/ga/labs/where-to-fish-project/public/map.html");
-})
+// //app.get("/maps", async (req,res) => {
+//  //  res.sendFile("/Users/macbook/code/ga/labs/where-to-fish-project/public/map.html");
+// })
+
+app.get('/maps', (req, res) => { //got this technique from chat gpt to directly inject a html file. pretty clunky.
+    const apiKey = process.env.GOOGLE_KEY; // Get API key from environment variables
+    res.send(`
+      <!doctype html>
+      <html>
+        <head>
+          <title>Add Map</title>
+          <link rel="stylesheet" type="text/css" href="/style.css" />
+          <script type="module" src="/link.js"></script>
+          <script type="module" src="/index.js"></script>
+        </head>
+        <body id="google-map">
+          <h3>Where did you fish?</h3><a href="/trips/new">Set these coordinates for your trip</a>
+          <div id="map"></div>
+          <script async defer id="google-script" src="https://maps.googleapis.com/maps/api/js?key=${apiKey}&callback=initMap"></script>
+        </body>
+        <style>
+          #map {
+            height: 100%;
+          }
+          html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+          }
+        </style>
+      </html>
+    `);
+  });
 
 app.listen(3000, () => { //created an express web server where server.js is the main entry point and configuration file
     console.log("Listening on port 3000")
