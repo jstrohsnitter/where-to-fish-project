@@ -1,7 +1,5 @@
-let globalLat = 0;
-let globalLng = 0;
-
-async function initMap() {
+//from google api tutorial
+async function initMap() { //
     // Request needed libraries.
     const { Map } = await google.maps.importLibrary("maps");
     const myLatlng = {lat: 41.365806156514495, lng: -71.48221425841729 };
@@ -21,24 +19,6 @@ async function initMap() {
       // Close the current InfoWindow.
       infoWindow.close();
 
-    //Update global latitude and longitude FROM CHAT GPT
-    const clickedLatLng = mapsMouseEvent.latLng.toJSON(); //this moethod returns a copy of the attributes as an object and sets them as a variable so they can be accessed later
-    globalLat = clickedLatLng.lat;
-    globalLng = clickedLatLng.lng;
-
-    console.log(`Latitude: ${globalLat}, Longitude: ${globalLng}`);
-
-    // Send the coordinates to the server LOOK THIS UP
-    fetch('http://localhost:3000/save-coordinates', {
-      method: 'POST',
-      headers: {
-          'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ lat: globalLat, lng: globalLng }),
-  })
-  .then((response) => response.json())
-  .then((data) => console.log('Server response:', data))
-  .catch((error) => console.error('Error:', error));
       // Create a new InfoWindow.
       infoWindow = new google.maps.InfoWindow({
         position: mapsMouseEvent.latLng,

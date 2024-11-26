@@ -6,15 +6,7 @@ const methodOverride = require("method-override");
 const morgan = require("morgan"); 
 const app = express();
 const axios = require("axios");
-const {google} = require('googleapis');
-const {authenticate} = require('@google-cloud/local-auth');
-const path = require('path');
-const bodyParser = require('body-parser'); //LOOK THIS UP
-let globalLat = 0;
-let globalLng = 0;
-console.log(`Latitude: ${globalLat}, Longitude: ${globalLng}`);
-app.locals.lat = globalLat;
-app.locals.lng = globalLng;
+
 
 mongoose.connect(process.env.MONGODB_URI); //connect to mongoDB using the connection string in the .env file
 mongoose.connection.on("connected", () => {
@@ -30,24 +22,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(methodOverride("_method")); // new
 app.use(express.static('public'));
-app.use(express.static('assets'));
-app.use(bodyParser.json()); //LOOK THIS UP
-// //app.use(morgan("dev")); 
+app.use(express.static('assets')); //was trying this for showing images but was having some trouble, worked around with imgur instead
 
-app.post('/save-coordinates', (req, res) => { //LOOK ALL THIS UP
-    const { lat, lng } = req.body; // Extract latitude and longitude from request body
-
-    console.log(`Received coordinates: Latitude=${lat}, Longitude=${lng}`);
-    globalLat = lat;
-    globalLng = lng;
-    // Example: Store or process the coordinates as needed
-    // You can save them to a database, file, or use them immediately
-
-    res.json({ message: 'Coordinates received successfully!', received: { lat, lng } });
-});
 
 app.get("/", async (req, res) => {
-    res.render("index.ejs")
+   res.render("index.ejs")
 })
 
 // GET /trips <----- Do this for fish under log a fish in trips/:tripId
@@ -60,13 +39,6 @@ app.get("/trips", async (req, res) => {
 
 //GET /trips/new
 app.get("/trips/new", (req, res) => {
-    app.get('/get-coordinates', (req, res) => {
-        if (globalLatitude !== null && globalLongitude !== null) {
-            res.json({ lat: globalLat, lng: globalLng });
-        } else {
-            res.status(404).json({ error: 'No coordinates available' });
-        }
-    });
     res.render("trips/new.ejs")
 })
 
@@ -85,13 +57,13 @@ app.post("/trips", async (req, res) => {
   app.get("/trips/:tripId", async (req,res) => {
     const foundTrip = await Trip.findById(req.params.tripId);
     if(foundTrip.weatherInfo.length < 1) {
-      function getData() {
+     function getData() {
      let lat = foundTrip.latitude;
      let lng = foundTrip.longitude
      console.log(`lat: ${lat}`)
-     let data = JSON.stringify({
-        "lat": lat, //this doesn't work
-        "lon": lng, //this doesn't work
+     let data = JSON.stringify({ //from this down to line 155 came from postman's embed code option. i added in all the math code for taking an average and then adding it to the trip schema as a sub document
+        "lat": lat, 
+        "lon": lng, 
         "model": "gfsWave",
         "parameters": [
           "waves"
@@ -104,19 +76,20 @@ app.post("/trips", async (req, res) => {
       
       let config = {
         method: 'post',
-        maxBodyLength: Infinity,
+        maxBodyLength: Infinity, //this is an axios request configuration, allows an unlimited request body. allows a large request to be made. this info is from chatgpt
         url: 'https://api.windy.com/api/point-forecast/v2',
-        headers: { 
+        headers: { //from chatgpt: this is specifying HTTP headers to include with the request. "it informs the server about the type of data being sent in the body of the request. application/json indicated that the payload is formatted as JSON (JavaScript Object Notation. the request is being sent as a JSON string, so with this you're telling the server to interpret the body as JSON"
           'Content-Type': 'application/json'
         },
         data : data
       };
       
-      axios.request(config) //LOOK THIS UP!! WHAT IS AXIOS???? WHAT IS REQUEST(CONFIG)
-      .then((response) => {
-          const waveHeight = response.data["waves_height-surface"]
+      axios.request(config) //from chatGPT "Axios is a popular JavaScript library (a pre-written collection of JavaScript code that provides reusable functions, methods, or tools to simplify common tasks in web development.) used to make HTTP requests from web browsers or Node.js environments. it simplifies the process of sending requests to APIs and handling responses"
+      .then((response) => { //original 'end' of postman nodejs script w/ a console.log(JSON.stringify(response.data)); as the function
+          const waveHeight = response.data["waves_height-surface"] //got help from chatgpt writing this function (some of it, the math syntax on finding an average, originally it gave me a function using some stuff i had never seen before, so i rewrote using a for each loop, and set new variables and what not)
           const waveDirection = response.data["waves_direction-surface"]
           const wavePeriod = response.data["waves_period-surface"]
+          //calculate average wave heightt
           function calculateSumHeight() {
           let sum = 0
           waveHeight.forEach(banana => {
@@ -129,8 +102,8 @@ app.post("/trips", async (req, res) => {
               return waveSum / waveHeight.length
           }
           const waveHeightAverage = calculateAverageHeight()
-              console.log("Wave Height Average:", waveHeightAverage);
-    
+          console.log("Wave Height Average:", waveHeightAverage);
+          //calculate average wave direction
           function calculateSumDirection() {
               let sum = 0
               waveDirection.forEach(banana => {
@@ -144,7 +117,7 @@ app.post("/trips", async (req, res) => {
                   }
               const waveDirectionAverage = calculateAverageDirection()
           console.log("Wave Direction Average:", waveDirectionAverage);
-    
+          //calculate average period
           function calculateSumPeriod() {
               let sum = 0
               wavePeriod.forEach(banana => {
@@ -170,13 +143,13 @@ app.post("/trips", async (req, res) => {
       const newWeather = foundTrip.weatherInfo.push(averages); //had to set this as a new variable in order to push the averages to the model
       console.log(newWeather)
       foundTrip.save()
-    res.render("trips/show.ejs", {trip: foundTrip});
+      res.render("trips/show.ejs", {trip: foundTrip});
   }) //then response close function syntax
 } getData()// getData closing bracket
-    } else { //if closing bracket, else for rendering page
+    } else { //if closing bracket, else for rendering page. what this is is doing is saying if the weatherInfo doesn't exist, run this getData function. at the end of the get data function, once all the variables are defined via call to the API, averages taken, render the show page with all the info set to trip
         res.render("trips/show.ejs", {trip: foundTrip});
     }
-}) //app.post closing syntax
+}) //app.get closing syntax
 
 //DELETE Trip
 app.delete("/trips/:tripId", async (req, res) => {
@@ -223,13 +196,12 @@ app.post("/trips/:tripId/fish", async (req, res) => {
       res.redirect(`/trips/${req.params.tripId}`);
   });
 
-
 //GET /maps
 // //app.get("/maps", async (req,res) => {
 //  //  res.sendFile("/Users/macbook/code/ga/labs/where-to-fish-project/public/map.html");
 // })
 
-app.get('/maps', (req, res) => { //got this technique from chat gpt to directly inject a html file. pretty clunky.
+app.get('/maps', (req, res) => { //got this technique from chat gpt to directly inject a html file. pretty clunky. had no idea this was an option
     const apiKey = process.env.GOOGLE_KEY; // Get API key from environment variables
     res.send(`
       <!doctype html>
@@ -407,3 +379,57 @@ app.listen(3000, () => { //created an express web server where server.js is the 
 //   </form>
 //   <a href="/trips/">Back to Trips</a>
 // </body>
+
+// //app.use(morgan("dev")); 
+
+// //app.post('/save-coordinates', (req, res) => { //LOOK ALL THIS UP
+//  //   const { lat, lng } = req.body; // Extract latitude and longitude from request body
+
+//   //  console.log(`Received coordinates: Latitude=${lat}, Longitude=${lng}`);
+//     //globalLat = lat;
+//  //   globalLng = lng;
+//     // Example: Store or process the coordinates as needed
+//     // You can save them to a database, file, or use them immediately
+
+//    // res.json({ message: 'Coordinates received successfully!', received: { lat, lng } });
+// });
+
+
+  //// app.get('/get-coordinates', (req, res) => {
+    //     if (globalLatitude !== null && globalLongitude !== null) {
+    //  //       res.json({ lat: globalLat, lng: globalLng });
+    //     } else {
+    //    //     res.status(404).json({ error: 'No coordinates available' });
+    //     }
+   // });
+
+     //   //Update global latitude and longitude FROM CHAT GPT
+  //   const clickedLatLng = mapsMouseEvent.latLng.toJSON(); //this moethod returns a copy of the attributes as an object and sets them as a variable so they can be accessed later
+  //   globalLat = clickedLatLng.lat;
+  //   globalLng = clickedLatLng.lng;
+
+  //   console.log(`Latitude: ${globalLat}, Longitude: ${globalLng}`);
+
+  //   // Send the coordinates to the server LOOK THIS UP
+  //   fetch('http://localhost:3000/save-coordinates', {
+  //     method: 'POST',
+  //     headers: {
+  //         'Content-Type': 'application/json',
+  //     },
+  //     body: JSON.stringify({ lat: globalLat, lng: globalLng }),
+  // })
+  // .then((response) => response.json())
+  // .then((data) => console.log('Server response:', data))
+  // .catch((error) => console.error('Error:', error));
+
+  // const {google} = require('googleapis');
+// const {authenticate} = require('@google-cloud/local-auth');
+// const path = require('path');
+// const bodyParser = require('body-parser'); //LOOK THIS UP
+// let globalLat = 0;
+// let globalLng = 0;
+// console.log(`Latitude: ${globalLat}, Longitude: ${globalLng}`);
+// app.locals.lat = globalLat;
+// app.locals.lng = globalLng;
+
+// //app.use(bodyParser.json()); //LOOK THIS UP
