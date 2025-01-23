@@ -1,0 +1,32 @@
+<!doctype html>
+<!--
+ @license
+ Copyright 2019 Google LLC. All Rights Reserved.
+ SPDX-License-Identifier: Apache-2.0
+ this is partially from a stackoverflow solution and partially from google's api tutorials
+-->
+<html>
+  <head>
+    <title>Add Map</title>
+
+    <link rel="stylesheet" type="text/css" href="/style.css" />
+    <script type="module" src="/link.js"></script>
+    <script type="module" src="/index.js"></script>
+  </head>
+  <body id="google-map">
+    <h3>Where did you fish?</h3><a href="/trips/new">Set these coordinates for your trip</a>
+    <div id="map"></div>
+    <!-- Replace the value of the key parameter with your own API key. -->
+    <script async defer id="google-script"></script>
+  </body>
+  <style>
+    #map {
+      height: 100%;
+    }
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+  </style>
+</html>

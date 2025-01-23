@@ -191,7 +191,7 @@ app.post("/trips/:tripId/fish", async (req, res) => {
       const newFishData = await Fish.create(req.body);
       const tripToUpdate = await Trip.findById(req.params.tripId)
       const newFish = tripToUpdate.fishInfo.push(newFishData)
-      await tripToUpdate.save()
+      tripToUpdate.save()
       console.log(newFish)
       res.redirect(`/trips/${req.params.tripId}`);
   });

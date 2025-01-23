@@ -1,0 +1,181 @@
+#map {
+    height: 300px; /* The height is 400 pixels */
+    width: 100%; /* The width is the width of the web page */
+}
+
+#home-body {
+    background: #fff8ed;
+    font-family: "DM Sans", sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    max-width: 100vw;
+  }
+
+#false-pass {
+    background-image: url("/Users/macbook/code/ga/labs/where-to-fish-project/assets/images/IMG_0067.jpg");
+    background-size: 100%;
+
+}
+
+#where {
+    background: #8a9cbc;
+    padding: 10px;
+    margin-top: 5px;
+    border: 5px ridge #d3cccc;
+    border-image-source: linear-gradient(
+        45deg, 
+        #e1e1e1, 
+        #b3ccf5, 
+        #ffda20, 
+        #ffffff
+      );
+      border-image-slice: .5;
+}
+
+#help {
+    background: #dcc7a6;
+    padding: 10px;
+    border: 5px ridge #ead792;
+    border-radius: 5px;
+    font-size: 20px;
+}
+
+#all-trips {
+  background: #c6edf2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center
+}
+
+#trip-header {
+  margin-right: 10px;
+}
+
+#trips-list {
+  width: 400px;
+}
+
+#all-trips-container {
+  margin: 10px;
+  background: #c6edf2;
+  display: flex;
+  align-content: left;
+  justify-content: center;
+}
+
+#fish-container {
+  margin-top: -50px;
+}
+
+#trip-header {
+  border: 3px ridge rgb(253, 68, 44);
+  border-radius: 50%;
+  height: 75px;
+  width: 170px;
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  padding-top: 10px;
+}
+
+#log {
+  
+  align-content: end;
+  
+}
+
+#show {
+  margin: 10px;
+}
+
+#browse-trips {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+#new-trip-body, #edit-trip-body {
+    background: #fff8ed;
+    font-family: "DM Sans", sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    justify-content: center;
+    max-width: 100vw;
+    margin: 10px;
+    /* line-height: 20px; */
+  }
+
+  #log-new-trip {
+    border: 5px ridge rgb(130, 187, 97);
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+
+  #back-to-trips {
+    margin-bottom: 10px;
+  }
+
+  #trip-list-group{
+    width: 70px,
+  }
+
+/* .list-group {
+    width: 30%;
+} */
+
+#show {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: left;
+  background: rgb(245, 236, 209);
+}
+
+#here {
+  border: 5px ridge rgb(188, 148, 0);
+  border-radius: 10%;
+  padding: 5px;
+}
+
+#show-name-date {
+  font-size: 25px;
+}
+
+#show-img-container {
+  margin-left: 300px;
+}
+
+#log-a-fish-button {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+#map-check-edit {
+  padding-bottom: 10px;
+}
+
+#edit-latitude {
+  margin-top: 10px;
+}
+
+#log-fish-button {
+  margin-bottom: 10px;
+}
+
+#species, #size, #tackle {
+  width: 200px
+}
+
+#edit-back-to-trips {
+  margin-top: 10px;
+  border: 5px ridge rgb(54, 54, 254);
+  margin-bottom: 20px;
+}
+
+#log-fish-body {
+  background-color: rgb(132, 153, 132);
+  margin: 10px;
+}
